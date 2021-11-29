@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { environment } from "../environment";
 
 interface UserPayload {
   id: string;
@@ -14,17 +15,15 @@ declare global {
   }
 }
 
-export const currentUser = (jwtKey: string) => {
-  return function (req: Request, res: Response, next: NextFunction) {
-    if (!req.session?.jwt) {
-      return next();
-    }
-
-    try {
-      const payLoad = jwt.verify(req.session.jwt, jwtKey) as UserPayload;
-      req.currentUser = payLoad;
-    } catch (error) { }
-
-    next();
+export const currentUser = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.session?.jwt) {
+    return next();
   }
+
+  try {
+    const payLoad = jwt.verify(req.session.jwt, environment.jwt_key) as UserPayload;
+    req.currentUser = payLoad;
+  } catch (error) { }
+
+  next();
 }
