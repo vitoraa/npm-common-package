@@ -26,7 +26,7 @@ export abstract class Listener<T extends Event> {
     subscription.on('message', (msg: Message) => {
       console.log(`Received a message #${msg.getSequence()}`);
       const data = this.parseMessage(msg);
-      console.log(`Parsed message: ${data}`);
+      console.log(`Parsed message: ${JSON.stringify(data)}`);
       this.onMessage(data, msg);
     });
   }
